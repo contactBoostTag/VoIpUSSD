@@ -14,7 +14,7 @@ ext {
     siteUrl = 'https://romellfudi.github.io/VoIpUSSDSample'
     gitUrl = 'https://romellfudi.github.io/VoIpUSSDSample.git'
 
-    libraryVersion = '1.2.b'
+    libraryVersion = '2.0.0'
 
     developerId = 'romellfudi'
     developerName = 'Romell Dominguez'
@@ -52,11 +52,4 @@ android {
 
 dependencies {
     implementation 'com.android.support:appcompat-v7:29.+'
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'org.mockito:mockito-all:1.10.19'
-    testImplementation 'org.powermock:powermock-module-junit4:1.6.2'
-    testImplementation 'org.powermock:powermock-api-mockito:1.6.2'
 }
-
-apply from: 'https://raw.githubusercontent.com/romellfudi/assets/bintray/artifactory_bintray.gradle'
-apply from: 'https://raw.githubusercontent.com/romellfudi/assets/bintray/artifactory_install.gradle'

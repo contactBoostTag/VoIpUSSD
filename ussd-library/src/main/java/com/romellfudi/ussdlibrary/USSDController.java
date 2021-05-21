@@ -38,13 +38,13 @@ public class USSDController implements USSDInterface, USSDApi {
 
     protected Context context;
 
-    protected HashMap<String, HashSet<String>> map;
+//    protected HashMap<String, HashSet<String>> map;
 
     protected CallbackInvoke callbackInvoke;
 
     protected CallbackMessage callbackMessage;
 
-    protected static final String KEY_LOGIN = "KEY_LOGIN";
+//    protected static final String KEY_LOGIN = "KEY_LOGIN";
 
     protected static final String KEY_ERROR = "KEY_ERROR";
 
@@ -70,45 +70,43 @@ public class USSDController implements USSDInterface, USSDApi {
         this.context = context;
     }
 
+//    /**
+//     * Invoke a dial-up calling a ussd number
+//     *
+//     * @param ussdPhoneNumber ussd number
+//     * @param map             Map of Login and problem messages
+//     * @param callbackInvoke  a callback object from return answer
+//     */
+//    public void callUSSDInvoke(String ussdPhoneNumber, CallbackInvoke callbackInvoke) {
+//        send=false;
+//        callUSSDInvoke(ussdPhoneNumber, callbackInvoke);
+//    }
+
+//    /**
+//     * Invoke a dial-up calling a ussd number and
+//     * you had a overlay progress widget
+//     *
+//     * @param ussdPhoneNumber ussd number
+//     * @param map             Map of Login and problem messages
+//     * @param callbackInvoke  a callback object from return answer
+//     */
+//    public void callUSSDOverlayInvoke(String ussdPhoneNumber, CallbackInvoke callbackInvoke) {
+//        callUSSDOverlayInvoke(ussdPhoneNumber, callbackInvoke);
+//    }
+
     /**
      * Invoke a dial-up calling a ussd number
      *
      * @param ussdPhoneNumber ussd number
-     * @param map             Map of Login and problem messages
-     * @param callbackInvoke  a callback object from return answer
-     */
-    public void callUSSDInvoke(String ussdPhoneNumber, HashMap<String, HashSet<String>> map, CallbackInvoke callbackInvoke) {
-        send=false;
-        callUSSDInvoke(ussdPhoneNumber, 0, map, callbackInvoke);
-    }
-
-    /**
-     * Invoke a dial-up calling a ussd number and
-     * you had a overlay progress widget
-     *
-     * @param ussdPhoneNumber ussd number
-     * @param map             Map of Login and problem messages
-     * @param callbackInvoke  a callback object from return answer
-     */
-    public void callUSSDOverlayInvoke(String ussdPhoneNumber, HashMap<String, HashSet<String>> map, CallbackInvoke callbackInvoke) {
-        send=false;
-        callUSSDOverlayInvoke(ussdPhoneNumber, 0, map, callbackInvoke);
-    }
-
-    /**
-     * Invoke a dial-up calling a ussd number
-     *
-     * @param ussdPhoneNumber ussd number
-     * @param simSlot         simSlot number to use
-     * @param map             Map of Login and problem messages
      * @param callbackInvoke  a callback object from return answer
      */
     @SuppressLint("MissingPermission")
-    public void callUSSDInvoke(String ussdPhoneNumber, int simSlot, HashMap<String, HashSet<String>> map, CallbackInvoke callbackInvoke) {
+    public void callUSSDInvoke(String ussdPhoneNumber, CallbackInvoke callbackInvoke) {
+        send = false;
         this.callbackInvoke = callbackInvoke;
-        this.map = map;
+//        this.map = map;
         if (verifyAccesibilityAccess(context)) {
-            dialUp(ussdPhoneNumber, simSlot);
+            dialUp(ussdPhoneNumber);
         } else {
             this.callbackInvoke.over("Check your accessibility");
         }
@@ -119,37 +117,39 @@ public class USSDController implements USSDInterface, USSDApi {
      * you had a overlay progress widget
      *
      * @param ussdPhoneNumber ussd number
-     * @param simSlot         simSlot number to use
-     * @param map             Map of Login and problem messages
      * @param callbackInvoke  a callback object from return answer
      */
     @SuppressLint("MissingPermission")
-    public void callUSSDOverlayInvoke(String ussdPhoneNumber, int simSlot, HashMap<String, HashSet<String>> map, CallbackInvoke callbackInvoke) {
+    public void callUSSDOverlayInvoke(String ussdPhoneNumber, CallbackInvoke callbackInvoke) {
+        send = false;
         this.callbackInvoke = callbackInvoke;
-        this.map = map;
+//        this.map = map;
         if (verifyAccesibilityAccess(context) && verifyOverLay(context)) {
-            dialUp(ussdPhoneNumber, simSlot);
+            dialUp(ussdPhoneNumber);
         } else {
             this.callbackInvoke.over("Check your accessibility | overlay permission");
         }
     }
 
-    private void dialUp(String ussdPhoneNumber, int simSlot) {
-        if (map == null || (!map.containsKey(KEY_ERROR) || !map.containsKey(KEY_LOGIN))) {
-            this.callbackInvoke.over("Bad Mapping structure");
-            return;
-        }
-        if (ussdPhoneNumber.isEmpty()) {
-            this.callbackInvoke.over("Bad ussd number");
-            return;
-        }
+    private void dialUp(String ussdPhoneNumber) {
+//        if (map == null || (!map.containsKey(KEY_ERROR) || !map.containsKey(KEY_LOGIN))) {
+//            this.callbackInvoke.over("Bad Mapping structure");
+//            return;
+//        }
+//        if (ussdPhoneNumber.isEmpty()) {
+//            this.callbackInvoke.over("Bad ussd number");
+//            return;
+//        }
         String uri = Uri.encode("#");
         if (uri != null)
             ussdPhoneNumber = ussdPhoneNumber.replace("#", uri);
         Uri uriPhone = Uri.parse("tel:" + ussdPhoneNumber);
         if (uriPhone != null)
             isRunning = true;
-        this.context.startActivity(getActionCallIntent(uriPhone, simSlot));
+//        this.context.startActivity(getActionCallIntent(uriPhone, simSlot));
+        Intent intent = new Intent(Intent.ACTION_CALL, uriPhone);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        this.context.startActivity(intent);
     }
 
     /**

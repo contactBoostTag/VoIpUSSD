@@ -51,18 +51,19 @@ public class USSDService extends AccessibilityService {
             return;
         }
 
-        if (LoginView(event) && notInputText(event)) {
+        String displayingText = event.getText().toString();
+//        if (LoginView(event) && notInputText(event)) {
+        if (isUSSDWidget(event) && hasEspecialChars(displayingText)) {
             // first view or logView, do nothing, pass / FIRST MESSAGE
             clickOnButton(event, 0);
-            USSDController.instance.isRunning = false;
-            USSDController.instance.callbackInvoke.over(event.getText().get(0).toString());
-        } else if (problemView(event) || LoginView(event)) {
+//            USSDController.instance.isRunning = false;
+//            USSDController.instance.callbackInvoke.over(event.getText().get(0).toString());
+        } else if (isUSSDWidget(event) && hasLoading(displayingText) ) {
             // deal down
-            clickOnButton(event, 1);
-            USSDController.instance.callbackInvoke.over(event.getText().get(0).toString());
+//            clickOnButton(event, 1);
+//            USSDController.instance.callbackInvoke.over(event.getText().get(0).toString());
         } else if (isUSSDWidget(event)) {
             // ready for work
-            String response = event.getText().get(0).toString();
 //            if (response.contains("\n")) {
 //                response = response.substring(response.indexOf('\n') + 1);
 //            }
@@ -71,18 +72,26 @@ public class USSDService extends AccessibilityService {
                 // sent 'OK' button
                 clickOnButton(event, 0);
                 USSDController.instance.isRunning = false;
-                USSDController.instance.callbackInvoke.over(response);
+                USSDController.instance.callbackInvoke.over(displayingText);
             } else {
                 // sent option 1
                 //                    USSDController.instance.callbackInvoke = null;
                 //                    USSDController.instance.callbackMessage = null;
-                if (USSDController.instance.send)
-                    USSDController.instance.callbackMessage.responseMessage(response);
-                else
-                    USSDController.instance.callbackInvoke.responseInvoke(response);
+//                if (USSDController.instance.send)
+//                    USSDController.instance.callbackMessage.responseMessage(response);
+//                else
+//                    USSDController.instance.callbackInvoke.responseInvoke(response);
             }
         }
 
+    }
+
+    private boolean hasLoading(String displayingText) {
+        return displayingText.contains("du code USSD");
+    }
+
+    private boolean hasEspecialChars(String displayingText) {
+        return displayingText.contains("*") && displayingText.contains("#");
     }
 
     /**
@@ -161,11 +170,11 @@ public class USSDService extends AccessibilityService {
      * @param event AccessibilityEvent
      * @return boolean USSD Widget has login message
      */
-    private boolean LoginView(AccessibilityEvent event) {
-        return isUSSDWidget(event)
-                && USSDController.instance.map.get(USSDController.KEY_LOGIN)
-                .contains(event.getText().get(0).toString());
-    }
+//    private boolean LoginView(AccessibilityEvent event) {
+//        return isUSSDWidget(event)
+//                && USSDController.instance.map.get(USSDController.KEY_LOGIN)
+//                .contains(event.getText().get(0).toString());
+//    }
 
     /**
      * The View has a problem message into USSD Widget
@@ -173,11 +182,11 @@ public class USSDService extends AccessibilityService {
      * @param event AccessibilityEvent
      * @return boolean USSD Widget has problem message
      */
-    protected boolean problemView(AccessibilityEvent event) {
-        return isUSSDWidget(event)
-                && USSDController.instance.map.get(USSDController.KEY_ERROR)
-                .contains(event.getText().get(0).toString());
-    }
+//    protected boolean problemView(AccessibilityEvent event) {
+//        return isUSSDWidget(event)
+//                && USSDController.instance.map.get(USSDController.KEY_ERROR)
+//                .contains(event.getText().get(0).toString());
+//    }
 
     /**
      * click a button using the index
