@@ -111,7 +111,7 @@ public class MainFragment extends Fragment {
         setHasOptionsMenu(false);
         binding.btn1.setOnClickListener(view -> {
             binding.result.setText("");
-            ussdApi.callUSSDInvoke(getPhoneNumber(), map, new USSDController.CallbackInvoke() {
+            ussdApi.callUSSDInvoke(getPhoneNumber(), new USSDController.CallbackInvoke() {
                 @Override
                 public void responseInvoke(String message) {
                     Timber.d(message);
@@ -188,7 +188,7 @@ public class MainFragment extends Fragment {
 
 
     private void callOverlay(Intent overlayDialogService) {
-        ussdApi.callUSSDOverlayInvoke(getPhoneNumber(), map, new USSDController.CallbackInvoke() {
+        ussdApi.callUSSDOverlayInvoke(getPhoneNumber(), new USSDController.CallbackInvoke() {
             @Override
             public void responseInvoke(String message) {
                 Timber.i(message);
